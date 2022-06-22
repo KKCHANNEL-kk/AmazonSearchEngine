@@ -1,3 +1,5 @@
+# An Search Engine Face to Reviews of Goods in Amazon 
+SZU Information Retrival Final Project
 ### TODO
 #### BackEnd
 - [ ] 后端起服务框架，路由

@@ -1,39 +1,8 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
-    <t-button :click="onClick()"> 按钮</t-button>
+    <router-view />
   </div>
 </template>
-
-<script>
-import HelloWorld from "./components/HelloWorld.vue";
-
-// import './custom.scss'
-
-export default {
-  name: "App",
-  components: {
-    HelloWorld,
-  },
-  methods: {
-    onClick() {
-      console.log("click");
-      this.$router
-        .resolve({
-          name: "HelloWorld",
-          path: "/queryPage",
-          params: {
-            msg: "Hello World",
-          },
-        })
-        .then(({ component }) => {
-          console.log(component);
-        });
-    },
-  },
-};
-</script>
 
 <style>
 #app {
@@ -42,6 +11,25 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  height: 100%;
+  width: 100%;
+}
+html {
+  overflow-y: scroll;
+}
+
+:root {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+:root body {
+  position: absolute;
+}
+
+body {
+  overflow: hidden;
+  min-height: 100vh;
+  width: 100%;
 }
 </style>

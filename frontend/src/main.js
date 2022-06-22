@@ -11,11 +11,15 @@ Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 
 // import TDesign from "tdesign-vue";
-import "tdesign-vue/es/style/index.css";
 // Vue.use(TDesign);
+
+import "tdesign-vue/es/style/index.css";
+
+import router from './router'
 
 Vue.config.productionTip = false;
 
 new Vue({
-  render: (h) => h(App),
+  router,
+  render: (h) => h(App)
 }).$mount("#app");

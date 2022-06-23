@@ -12,14 +12,15 @@ Vue.use(IconsPlugin);
 
 // import TDesign from "tdesign-vue";
 // Vue.use(TDesign);
-
 import "tdesign-vue/es/style/index.css";
+import router from "./router";
 
-import router from './router'
+import Axios from "axios";
+Vue.prototype.$http = Axios; //在Vue的原型上添加$axios方法
 
 Vue.config.productionTip = false;
 
 new Vue({
   router,
-  render: (h) => h(App)
+  render: (h) => h(App),
 }).$mount("#app");

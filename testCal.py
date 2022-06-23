@@ -9,8 +9,8 @@ import service
 os.chdir(r'd:\Vscodeworkplace\amzSearch')
 
 service.start_service()
-print(1)
-# meta = store.getDF('data/meta_Gift_Cards.json.gz')
+# print(1)
+meta = store.getDF('data/meta_Gift_Cards.json.gz')
 # review = store.getDF('data/Gift_Cards.json.gz')
 # info = store.load_field_cache('reviewText')
 
@@ -61,3 +61,5 @@ print(1)
 #                 break
 #         except Exception as e:
 #             exit(e)
+
+r = service.handle_query('shoe','title')

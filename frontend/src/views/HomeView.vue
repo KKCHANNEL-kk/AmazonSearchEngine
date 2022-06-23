@@ -8,7 +8,9 @@
           v-model="query"
           placeholder="Enter info you need"
         ></b-form-input>
-        <b-button variant="outline-primary">Query</b-button>
+        <b-button variant="outline-primary" @click="get_query()"
+          >Query</b-button
+        >
       </div>
     </b-container>
     <b-container>
@@ -19,11 +21,20 @@
         :title="`${info.title}`"
         :sub-title="`corr:${info.corr}`"
         :img-src="info.img"
-        img-alt="Card image"
         img-left
       >
-        <b-card-text><b>Feature: </b>{{ info.feature }}</b-card-text>
-        <b-card-text><b>Description: </b>{{ info.description }}</b-card-text>
+        <b-card-text
+          ><b>Feature: </b>
+          <li v-for="(f, index) in info.feature" :key="index">
+            {{ f }}
+          </li></b-card-text
+        >
+        <b-card-text
+          ><b>Description: </b>
+          <li v-for="(f, index) in info.description" :key="index">
+            {{ f }}
+          </li></b-card-text
+        >
         <b-card-text
           ><p><b>Hot Review: </b>{{ info.review.text }}</p>
           <p><b>Vote: </b>{{ info.review.vote }}</p>
@@ -52,11 +63,19 @@ export default {
         },
         {
           text: "review",
-          value: "review",
+          value: "reviewText",
         },
         {
           text: "feature",
           value: "feature",
+        },
+        {
+          text: "summary",
+          value: "summary",
+        },
+        {
+          text: "description",
+          value: "description",
         },
       ],
       field: "title",
@@ -66,10 +85,12 @@ export default {
           asin: "B07XQQQQQQ",
           corr: "0.99",
           title: "Test-The Great Gatsby",
-          feature:
+          feature: [
             "The Great Gatsby is a novel written by American author F. Scott Fitzgerald that chronicles the adventures of the fabulously wealthy Jay Gatsby and his friends Nick and Jay.",
-          description:
+          ],
+          description: [
             "The Great Gatsby is a novel written by American author F. Scott Fitzgerald that chronicles the adventures of the fabulously wealthy Jay Gatsby and his friends Nick and Jay.",
+          ],
           review: {
             text: "good",
             vote: 5,
@@ -80,10 +101,12 @@ export default {
         {
           asin: "B07XQQBQQQ",
           title: "Test2-The Great Gatsby",
-          feature:
+          feature: [
             "The Great Gatsby is a novel written by American author F. Scott Fitzgerald that chronicles the adventures of the fabulously wealthy Jay Gatsby and his friends Nick and Jay.",
-          description:
+          ],
+          description: [
             "The Great Gatsby is a novel written by American author F. Scott Fitzgerald that chronicles the adventures of the fabulously wealthy Jay Gatsby and his friends Nick and Jay.",
+          ],
           review: {
             top_review: "good",
             vote: 5,
@@ -93,6 +116,23 @@ export default {
         },
       ],
     };
+  },
+  methods: {
+    get_query: function () {
+      let params = {
+        field: this.field,
+        query: this.query,
+      };
+      this.$http
+        .get("http://127.0.0.1:5000/query", {
+          params: params,
+        })
+        .then((response) => {
+          console.log(response);
+          this.prod_info = response.data;
+          console.log(this.prod_info);
+        });
+    },
   },
 };
 </script>
@@ -113,6 +153,10 @@ export default {
 }
 p {
   text-align: left;
+}
+img {
+  width: 50%;
+  height: 50%;
 }
 .query_box {
   display: flex;

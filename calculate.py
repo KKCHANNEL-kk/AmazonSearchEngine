@@ -3,39 +3,55 @@ import math
 from operator import itemgetter
 import re
 from nltk.stem import SnowballStemmer
-
+from nltk.util import ngrams
 
 def tokenize(doc, ngram=1):
     raw_str = re.sub('[^\w ]', '', doc)
-    return word_tokenize(raw_str)
+    result = word_tokenize(raw_str)
+    if ngram > 1:
+        result = list(ngrams(result, 2))
+    return result
+
+
+# TODO tf-idf缓存层
+tfidf_cache = {}
 
 
 def tfidf_matrix(doc_type: str, docs: list[str], tf: dict, df: dict, N: int):
     matrix = {}
+    global tfidf_cache
     if doc_type == 'short':
         for doc_asin in docs:
-            tf_mini = tf[doc_asin]
-            vec = {}
-            for term, tf_val in tf_mini.items():
-                df_val = df[term]
-                idf_val = math.log(N/df_val, 10)
-                vec[term] = round((1+math.log(tf_val, 10))*idf_val, 6)
-            matrix[doc_asin] = vec
+            try:
+                matrix[doc_asin] = tfidf_cache[doc_asin]
+            except KeyError:
+                tf_mini = tf[doc_asin]
+                vec = {}
+                for term, tf_val in tf_mini.items():
+                    df_val = df[term]
+                    idf_val = math.log(N/df_val, 10)
+                    vec[term] = round((1+math.log(tf_val, 10))*idf_val, 6)
+                matrix[doc_asin] = vec
+                tfidf_cache[doc_asin] = vec
 
     elif doc_type == 'long':
         for doc_asin in docs:
-            tf_mini = tf[doc_asin]
-            # 为了获得长文本/评论文本的总词频，需要多遍历一次
-            tf_sum = 0
-            for term, tf_val in tf_mini.items():
-                tf_sum += tf_val
+            try:
+                matrix[doc_asin] = tfidf_cache[doc_asin]
+            except KeyError:
+                tf_mini = tf[doc_asin]
+                # 为了获得长文本/评论文本的总词频，需要多遍历一次
+                tf_sum = 0
+                for term, tf_val in tf_mini.items():
+                    tf_sum += tf_val
 
-            vec = {}
-            for term, tf_val in tf_mini.items():
-                df_val = df[term]
-                idf_val = math.log(N/df_val, 10)
-                vec[term] = round((tf_val/tf_sum)*idf_val, 6)
-            matrix[doc_asin] = vec
+                vec = {}
+                for term, tf_val in tf_mini.items():
+                    df_val = df[term]
+                    idf_val = math.log(N/df_val, 10)
+                    vec[term] = round((tf_val/tf_sum)*idf_val, 6)
+                matrix[doc_asin] = vec
+                tfidf_cache[doc_asin] = vec
 
     return matrix
 

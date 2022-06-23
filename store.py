@@ -143,7 +143,7 @@ def parse_doc(doc, doc_asin, doc_field):
         term_tf[term] += 1
         if term not in index:
             index[term] = []
-        index[term].append(doc_asin)
+            index[term].append(doc_asin)
         term_set.add(term)
 
     return index, doc_len, term_tf, term_set

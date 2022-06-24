@@ -20,6 +20,7 @@ def getDF(path):
         i += 1
     return pd.DataFrame.from_dict(df, orient='index')
 
+
 # 初始化数据，将新语料读入语料库
 df1 = getDF('data/meta_Gift_Cards.json.gz')
 fields = ['title', 'feature', 'description']
@@ -29,7 +30,8 @@ print('df1 shape: {}'.format(df1.shape))
 def init_data(df, field):
     data = list(zip(df['asin'], df[field]))
     info = store.init_docs_info(field, data)
-    # store.info_dump(info, 'cache/{}_info.json'.format(field))
+    store.info_dump(info, 'cache/{}_info.json'.format(field))
+
 
 for field in fields:
     start = time.time()

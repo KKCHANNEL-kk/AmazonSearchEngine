@@ -9,7 +9,7 @@ def tokenize(doc, ngram=1):
     raw_str = re.sub('[^\w ]', '', doc)
     result = word_tokenize(raw_str)
     if ngram > 1:
-        result = list(ngrams(result, 2))
+        result = list(ngrams(result, ngram))
     return result
 
 
@@ -27,7 +27,7 @@ def tfidf_matrix(doc_type: str, docs: list[str], tf: dict, df: dict, N: int):
             except KeyError:
                 tf_mini = tf[doc_asin]
                 vec = {}
-                for term, tf_val in tf_mini.items():
+                for (term, tf_val) in tf_mini:
                     df_val = df[term]
                     idf_val = math.log(N/df_val, 10)
                     vec[term] = round((1+math.log(tf_val, 10))*idf_val, 6)
@@ -138,6 +138,37 @@ def multiIntersect(lists: list) -> list:
         index += 1
     return answer
 
+# TODO union待测试
+def union(list1: list, list2: list) -> list:
+    """
+    取两个列表的并集
+    """
+    answer = []
+    i = 1
+    j = 1
+    len_i = list1[0]
+    len_j = list2[0]
+    answer.append(0)
+    while i <= len_i and j <= len_j:
+        if list1[i] == list2[j]:
+            answer.append(list1[i])
+            answer[0] = answer[0]+1
+            i += 1
+            j += 1
+        elif list1[i] < list2[j]:
+            answer.append(list1[i])
+            answer[0] = answer[0]+1
+            i += 1
+        else:
+            answer.append(list2[j])
+            answer[0] = answer[0]+1
+            j += 1
+    for doc_id in list1[i:]:
+        answer.append(doc_id)
+    for doc_id in list2[j:]:
+        answer.append(doc_id)
+    answer[0] = answer[0]+len(list1[i:])+len(list2[j:])
+    return answer
 
 def get_query_tfidf(tokens: list, df, N):
     term_tf = {}

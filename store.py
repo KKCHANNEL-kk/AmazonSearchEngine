@@ -85,9 +85,11 @@ def init_docs_info(doc_field, docs, cache_type='json'):
         # 大量无序索引列表，先合并，再排序。补充新索引，则先对补充部分排序，再合并。
         basic_info['tf'][doc_asin] = list(
             sorted(term_tf.items(), key=itemgetter(0), reverse=False))
-
+    # DEBUG 前面没有把df打包进来
+    basic_info['df'] = df
     for item, index_list in basic_info['index'].items():
-        basic_info['index'][item] = index_list.sort()
+        # DEBUG: list.sort默认改变原数组，返回值是None
+        basic_info['index'][item] = sorted(index_list)
 
     # TODO redis部分 待优化
     # conn = get_redis_connect()
